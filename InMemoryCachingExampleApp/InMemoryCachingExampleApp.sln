@@ -5,6 +5,8 @@ VisualStudioVersion = 17.4.33403.182
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "InMemoryCachingExample", "InMemoryCachingExample\InMemoryCachingExample.csproj", "{28016C11-EE09-43C0-ADA3-327AF80F7A45}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DataAccessLibrary", "DataAccessLibrary\DataAccessLibrary.csproj", "{B1BC6B02-B963-453E-85FE-EF2788F79CD1}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,6 +17,10 @@ Global
 		{28016C11-EE09-43C0-ADA3-327AF80F7A45}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{28016C11-EE09-43C0-ADA3-327AF80F7A45}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{28016C11-EE09-43C0-ADA3-327AF80F7A45}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B1BC6B02-B963-453E-85FE-EF2788F79CD1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B1BC6B02-B963-453E-85FE-EF2788F79CD1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B1BC6B02-B963-453E-85FE-EF2788F79CD1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B1BC6B02-B963-453E-85FE-EF2788F79CD1}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
