@@ -479,5 +479,5 @@ $RECYCLE.BIN/
 # Migration files
 */Migrations/
 
-#  App settingsfiles
-*/appsettings.
+#  App settings files
+*/appsettings*
