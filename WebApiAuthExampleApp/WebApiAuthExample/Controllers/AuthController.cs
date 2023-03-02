@@ -44,7 +44,8 @@ namespace WebApiAuthExample.Controllers
                 if (!userResponseData.Success)
                 {
                     return BadRequest(userResponseData);
-                } else
+                }
+                else
                 {
                     return Ok(userResponseData);
                 }

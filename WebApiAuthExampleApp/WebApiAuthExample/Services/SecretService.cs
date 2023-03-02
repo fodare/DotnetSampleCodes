@@ -1,5 +1,4 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using System.Security.Claims;
 using WebApiAuthExample.Data;
 using WebApiAuthExample.DTO;

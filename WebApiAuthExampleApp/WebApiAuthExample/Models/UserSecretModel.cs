@@ -9,4 +9,3 @@
         public UserModel? User { get; set; }
     }
 }
-    

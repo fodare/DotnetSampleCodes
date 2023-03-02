@@ -1,9 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.VisualBasic;
 using System.Security.Claims;
-using WebApiAuthExample.Data;
 using WebApiAuthExample.DTO;
 using WebApiAuthExample.Models;
 using WebApiAuthExample.Services;
