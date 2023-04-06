@@ -5,7 +5,7 @@
         public int Id { get; set; }
         public string? ProductName { get; set; }
 
-        public IList<Product> products = new List<Product>();
+        public List<Product> products = new List<Product>();
 
         public void SeedProductList()
         {
@@ -23,6 +23,43 @@
         public List<Product> GetProducts()
         {
             return products.ToList();
+        }
+
+        public string GetProductName(int id)
+        {
+            var product = products.Where(x => x.Id == id);
+            return product.FirstOrDefault()?.ProductName;
+        }
+
+        public string UpdateProductName(int id, string productName)
+        {
+            int itemIndex = products.FindIndex(x => x.Id == id);
+            var result = "";
+            if (itemIndex != -1)
+            {
+                products[itemIndex].ProductName = productName;
+                result = "Okay. Item name modified!";
+            }
+            else
+            {
+                result = "Error modifying item!";
+            }
+            return result;
+        }
+
+        public string RemoveItem(int id)
+        {
+            var result = "";
+            int itemIndex = products.FindIndex(x => x.Id == id);
+            if (itemIndex != -1)
+            {
+                products.RemoveAt(itemIndex);
+                return "Ok. Item removed";
+            }
+            else
+            {
+                return "Error removing item!";
+            }
         }
     }
 }

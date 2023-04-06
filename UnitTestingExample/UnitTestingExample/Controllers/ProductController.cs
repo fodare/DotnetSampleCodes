@@ -36,5 +36,30 @@ namespace UnitTestingExample.Controllers
             var result = _product.GetProducts();
             return Ok(result.ToList());
         }
+
+        [HttpGet("GetName/{id}", Name = "GetProductName")]
+        public IActionResult FetchProductName(int id)
+        {
+            var productName = _product.GetProductName(id);
+            if (productName == null)
+            {
+                return NotFound();
+            }
+            return Ok(productName);
+        }
+
+        [HttpPut("Update/{id}", Name = "UpdateProductName")]
+        public IActionResult ModifyProductName(int id, Product newItem)
+        {
+            var result = _product.UpdateProductName(id, newItem.ProductName);
+            return Ok(result);
+        }
+
+        [HttpDelete("remove/{id}", Name = "RemoveItem")]
+        public IActionResult RemoveItemList(int id)
+        {
+            var result = _product.RemoveItem(id);
+            return Ok(result);
+        }
     }
 }

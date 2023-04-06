@@ -17,5 +17,23 @@ namespace ProductUnitTest
             // Assert
             Assert.Equal(4, productItemCount);
         }
+
+        [Theory]
+        [InlineData("SampleProduct")]
+        public void Test_Update_ItemName_Method(string productName)
+        {
+            // Arranage
+            Product _product = new Product();
+            _product.SeedProductList();
+            int testId = 1;
+            string oldProductname = _product.GetProductName(testId);
+
+            // Act
+            _product.UpdateProductName(testId, productName);
+            string newProdcutName = _product.GetProductName(testId);
+
+            // Arrange
+            Assert.Equal(newProdcutName, productName);
+        }
     }
 }
