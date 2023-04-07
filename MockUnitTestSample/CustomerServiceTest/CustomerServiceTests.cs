@@ -1,3 +1,4 @@
+using MockUnitTestSample.Models;
 using MockUnitTestSample.Services;
 using Moq;
 
@@ -57,6 +58,30 @@ namespace CustomerServiceTest
 
             // Assert
             Assert.Equal(newCustomerCount, customerCount - 1);
+        }
+
+        [Fact]
+        public void AddNewCustomer_Adds_To_CustomerList()
+        {
+            // Arrange
+            _sut.SeedList();
+            var newCustomer = new Customer
+            {
+                Id = 1,
+                FirstName = "Uncle",
+                LastName = "Bob",
+                ActiveSubscriber = false,
+                CreationDate = DateTime.Now,
+            };
+            var customerList = _sut.GetCustomers();
+            var customerCount = customerList.Count;
+
+            // Act
+            var newCustomerList = _sut.AddNewCustomer(newCustomer);
+            var newCustomerCount = newCustomerList.Count;
+
+            // Assert
+            Assert.Equal(newCustomerCount, customerCount + 1);
         }
     }
 }
