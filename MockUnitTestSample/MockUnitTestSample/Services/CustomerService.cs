@@ -15,25 +15,32 @@ namespace MockUnitTestSample.Services
         {
             _customerRepo.SeedCustomerList();
         }
-        public async Task<List<Customer>> AddNewCustomer(Customer customer)
+        public List<Customer> AddNewCustomer(Customer customer)
         {
-            await _customerRepo.AddNewCustomer(customer);
-            return _customerRepo.FetchAllCustomers();
-        }
-
-        public Task<bool> DeleteCustomer(int id)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task<Customer> GetCustomerInfo(int id)
-        {
-            throw new NotImplementedException();
-        }
-
-        public async Task<List<Customer>> GetCustomers()
-        {
+            _customerRepo.AddNewCustomer(customer);
             return _customerRepo.FetchAllCustomers().ToList();
+        }
+
+        public List<Customer> DeleteCustomer(int id)
+        {
+            var result = _customerRepo.DeleteCustomer(id);
+            return result.ToList();
+        }
+
+        public Customer GetCustomerInfo(int id)
+        {
+            var result = _customerRepo.FetchCustomerInfo(id);
+            if (result is null)
+            {
+                ;
+            }
+            return result;
+        }
+
+        public List<Customer> GetCustomers()
+        {
+            var result = _customerRepo.FetchAllCustomers() ;
+            return result.ToList();
         }
     }
 }

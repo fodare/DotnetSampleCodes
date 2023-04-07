@@ -17,28 +17,46 @@ namespace MockUnitTestSample.Controllers
         }
 
         [HttpGet("GetCustomers", Name = "GetAllCustomers")]
-        public async Task<ActionResult> FetchCustomersAsync()
+        public IActionResult FetchCustomersAsync()
         {
-            var customerList =  await _customerService.GetCustomers();
+            var customerList = _customerService.GetCustomers();
             if (customerList is null | customerList.Count <= 0)
             {
                 Console.WriteLine("Customer List empty. Seeding list with dummy item!");
                 _customerService.SeedList();
-                customerList = await _customerService.GetCustomers();
+                customerList = _customerService.GetCustomers();
             }
             return Ok(customerList);
         }
 
-        [HttpPost("AddCustomer", Name = "AddNewCustomer")]
-        public async Task<ActionResult> NewCustomer(Customer customer)
+        [HttpGet("GetCustomer/{id}", Name = "GeCustomerInfoByID")]
+        public IActionResult FetchCustomer(int id)
         {
-            var result = await _customerService.AddNewCustomer(customer);
+            var result = _customerService.GetCustomerInfo(id);
+            if (result is null)
+            {
+                return BadRequest("Error fetching customer number");
+            }
+            return Ok(result);
+        }
+
+        [HttpPost("AddCustomer", Name = "AddNewCustomer")]
+        public IActionResult NewCustomer(Customer customer)
+        {
+            var result = _customerService.AddNewCustomer(customer);
             if (result is null)
             {
                 return BadRequest(result);
             }
             return Ok(result);
-            
+
+        }
+
+        [HttpDelete("RemoveCustomer/{id}", Name = "RemoveCustomerById")]
+        public IActionResult DeleteCustomer(int id)
+        {
+            var result = _customerService.DeleteCustomer(id);
+            return Ok(result);
         }
     }
 }

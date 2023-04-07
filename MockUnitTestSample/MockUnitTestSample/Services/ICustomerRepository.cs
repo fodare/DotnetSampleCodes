@@ -44,7 +44,7 @@ namespace MockUnitTestSample.Services
 
         public List<Customer> FetchAllCustomers() => _customerList.ToList();
 
-        public async Task<List<Customer>> AddNewCustomer(Customer customer)
+        public List<Customer> AddNewCustomer(Customer customer)
         {
             _customerList.Add(new Customer
             {
@@ -57,7 +57,7 @@ namespace MockUnitTestSample.Services
             return _customerList.ToList();
         }
 
-        public Customer GetCustomerInfo(int id)
+        public Customer FetchCustomerInfo(int id)
         {
             var customer = new Customer();
             var customerInfo = _customerList.Where(x => x.Id == id).ToList();
@@ -67,6 +67,13 @@ namespace MockUnitTestSample.Services
             customer.ActiveSubscriber = (bool)(customerInfo.FirstOrDefault()?.ActiveSubscriber);
             customer.CreationDate = (DateTime)(customerInfo.FirstOrDefault()?.CreationDate);
             return customer;
+        }
+
+        public List<Customer> DeleteCustomer(int id)
+        {
+            int customerIndex = _customerList.FindIndex(x=> x.Id == id);
+            _customerList.RemoveAt(customerIndex);
+            return _customerList.ToList();
         }
     }
 }
