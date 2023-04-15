@@ -11,9 +11,14 @@ namespace WebAuthExample.Services
             _secretrepo = secretRepository;
         }
 
-        public async Task<Secret> CreateSecretasync(Secret newSecret)
+        public async Task<string> CreateSecretasync(Secret newSecret)
         {
-            throw new NotImplementedException();
+            var result = await _secretrepo.CreateSecretAsync(newSecret);
+            if (!string.Equals(result, "Secret added successfully!"))
+            {
+                return result;
+            }
+            return result;
         }
 
         public Task<List<Secret>> DeleteSecretAsync(int id)

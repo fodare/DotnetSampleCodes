@@ -1,9 +1,11 @@
 using Microsoft.AspNetCore.Authentication.Cookies;
+using WebAuthExample.Repositories;
 using WebAuthExample.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
+builder.Services.AddSingleton<IUsersRepository>();
 builder.Services.AddControllersWithViews();
 builder.Services.AddMvc();
 builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)

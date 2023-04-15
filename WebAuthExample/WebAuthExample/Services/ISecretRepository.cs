@@ -55,5 +55,21 @@ namespace WebAuthExample.Services
             var secrets = GetSecretsAsync();
             return await secrets;
         }
+
+        public async Task<string> CreateSecretAsync(Secret newSecret)
+        {
+            string message = "";
+            try
+            {
+                await Task.Run(() => secretList.Add(newSecret));
+                message = $"Secret added successfully!";
+            }
+            catch (Exception ex)
+            {
+                message = ex.Message;
+            }
+            return message;
+
+        }
     }
 }
