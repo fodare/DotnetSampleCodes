@@ -481,3 +481,4 @@ $RECYCLE.BIN/
 
 #  App settings files
 */appsettings*
+Apis/UserApi/appsettings.json
