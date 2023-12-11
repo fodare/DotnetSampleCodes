@@ -1,10 +1,7 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using APIBasics.Data;
 using Microsoft.AspNetCore.Mvc;
 using webapi.Models;
+using webapi.Dtos;
 
 namespace webapi.Controllers
 {
@@ -56,7 +53,7 @@ namespace webapi.Controllers
         }
 
         [HttpPut("user/{userId}", Name = "UpdateUser")]
-        public IActionResult UpdateUser([FromBody] User updatedUser, int userId)
+        public IActionResult UpdateUser([FromBody] UserDTO updatedUser, int userId)
         {
             string checkUserCommand = $@"SELECT [FirstName] FROM TutorialAppSchema.Users
                 WHERE UserId = '{userId}'";
@@ -66,9 +63,8 @@ namespace webapi.Controllers
                 [FirstName] = '{updatedUser.FirstName}', 
                 [LastName] = '{updatedUser.LastName}', 
                 [Email] = '{updatedUser.Email}', 
-                [Gender] = '{updatedUser.Gender}',
+                [Gender] = '{updatedUser.Gender}'
                 WHERE UserId = '{userId}'";
-
             var queriedUser = _dappar.LoadDataSingle<User>(checkUserCommand);
             if (queriedUser.FirstName == null)
             {
@@ -89,7 +85,7 @@ namespace webapi.Controllers
         }
 
         [HttpPost("user/create", Name = "CreateUser")]
-        public IActionResult CreateUser([FromBody] User newUser)
+        public ActionResult<UserDTO> CreateUser([FromBody] UserDTO newUser)
         {
             string sqlCommand = @$"INSERT INTO TutorialAppSchema.Users(
                 [FirstName], 
@@ -106,6 +102,34 @@ namespace webapi.Controllers
             else
             {
                 return StatusCode(StatusCodes.Status500InternalServerError, new { message = "Code error. Please report to service desk for further assistance." });
+            }
+        }
+
+        [HttpDelete("user/{userId}", Name = "DeleteUser")]
+        public IActionResult DeleteUser(int userId)
+        {
+            string sqlDeleteCommand = @$"DELETE FROM TutorialAppSchema.Users
+                WHERE UserId = '{userId}'";
+
+            string checkUserCommand = $@"SELECT [FirstName] FROM TutorialAppSchema.Users
+                WHERE UserId = '{userId}'";
+
+            var queriedUser = _dappar.LoadDataSingle<User>(checkUserCommand);
+            if (queriedUser.FirstName == null)
+            {
+                return NotFound("User id not found");
+            }
+            else
+            {
+                bool userDeleted = _dappar.ExecuteSql(sqlDeleteCommand);
+                if (userDeleted)
+                {
+                    return Ok("User deleted succeffully!");
+                }
+                else
+                {
+                    return StatusCode(StatusCodes.Status500InternalServerError, new { message = "Code error. Please report to service desk for further assistance." });
+                }
             }
         }
     }
