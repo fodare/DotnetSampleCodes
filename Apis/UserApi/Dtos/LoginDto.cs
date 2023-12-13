@@ -6,9 +6,9 @@ namespace UserApi.Dtos
     public class LoginDto
     {
         [JsonPropertyName("email")]
-        string Email { get; set; } = "";
+        public string Email { get; set; } = "";
 
         [JsonPropertyName("password")]
-        string Password { get; set; } = "";
+        public string Password { get; set; } = "";
     }
 }
