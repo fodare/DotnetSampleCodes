@@ -7,12 +7,12 @@ namespace UserApi.Dtos
     public class UserRegDto
     {
         [JsonPropertyName("email")]
-        string Email { get; set; } = "";
+        public string Email { get; set; } = "";
 
         [JsonPropertyName("password")]
-        string Password { get; set; } = "";
+        public string Password { get; set; } = "";
 
         [JsonPropertyName("passwordConformation")]
-        string PasswordConformation { get; set; } = "";
+        public string PasswordConformation { get; set; } = "";
     }
 }
