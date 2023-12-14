@@ -1,5 +1,8 @@
 using System;
+using System.Security.Cryptography;
+using System.Text;
 using APIBasics.Data;
+using Microsoft.AspNetCore.Cryptography.KeyDerivation;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using UserApi.Dtos;
@@ -30,6 +33,28 @@ namespace UserApi.Controllers
                 IEnumerable<string> users = _dapper.LoadData<string>(sqlCommand);
                 if (users.Count() == 0)
                 {
+                    byte[] randomPasswordSalt = new byte[128 / 8];
+
+                    using (RandomNumberGenerator randomNumber = RandomNumberGenerator.Create())
+                    {
+                        randomNumber.GetNonZeroBytes(randomPasswordSalt);
+                    }
+
+                    string passwordSalt = _config.GetSection("AppSettings:PasswordKey").Value
+                        + Convert.ToBase64String(randomPasswordSalt);
+
+                    byte[] passwordHash = KeyDerivation.Pbkdf2(
+                        password: newUser.Password,
+                        salt: Encoding.ASCII.GetBytes(passwordSalt),
+                        prf: KeyDerivationPrf.HMACSHA256,
+                        iterationCount: 100000,
+                        numBytesRequested: 256 / 8
+                    );
+
+                    string sqlAddauth = @$"INSERT INTO TutorialAppSchema.Auth(
+                        Email,PasswordHash, PasswordSalt
+                    )VALUES ('{newUser.Email}',{passwordHash},{passwordSalt})";
+                    _dapper.ExecuteSql(sqlAddauth);
                     return Ok();
                 }
                 else
