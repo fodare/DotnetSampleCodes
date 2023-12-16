@@ -1,10 +1,15 @@
 using System;
+using System.IdentityModel.Tokens.Jwt;
+using System.Runtime.InteropServices;
+using System.Security.Claims;
 using System.Security.Cryptography;
+using System.Security.Cryptography.Xml;
 using System.Text;
 using APIBasics.Data;
 using Microsoft.AspNetCore.Cryptography.KeyDerivation;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using Microsoft.IdentityModel.Tokens;
 using UserApi.Dtos;
 using webapi.Models;
 
@@ -87,14 +92,27 @@ namespace UserApi.Controllers
         {
             string sqlCheckUser = @$"SELECT [Email], [Password], [PasswordConformation] FROM
                 TutorialAppSchema.AuthTable WHERE [Email] = '{userCreds.Email}'";
+
             IEnumerable<UserRegDto> foundUsers = _dapper.LoadData<UserRegDto>(sqlCheckUser);
+
             if (foundUsers.Any())
             {
                 foreach (var user in foundUsers)
                 {
                     if (user.Password == userCreds.Password)
                     {
-                        return Ok("Account found");
+                        string sqlGetUserId = @$"SELECT 
+                        [UserId] FROM TutorialAppSchema.Users
+                            WHERE Email = '{user.Email}'";
+
+                        int LoginUserId = _dapper.LoadDataSingle<int>(sqlGetUserId);
+
+                        string newJwtToken = CreateJwtToken(userEmail: user.Email, userId: LoginUserId);
+
+                        return Ok(
+                            new Dictionary<string, string>{
+                                {"token", $"{newJwtToken}"}
+                            });
                     }
                     else
                     {
@@ -103,6 +121,36 @@ namespace UserApi.Controllers
                 }
             }
             return BadRequest("Account not found!");
+        }
+
+        private string CreateJwtToken(int userId, string userEmail)
+        {
+            Claim[] claims = new Claim[]{
+                new("userId", userId.ToString()),
+                new("userEmail", userEmail)
+            };
+
+            string? securityTokenKey = _config.GetSection("AppSettings:TokenKey").Value;
+
+            SymmetricSecurityKey tokenKey = new(
+                Encoding.UTF8.GetBytes(securityTokenKey ?? "")
+            );
+
+            SigningCredentials credentials = new(tokenKey, SecurityAlgorithms.HmacSha512Signature);
+
+            SecurityTokenDescriptor descriptor = new()
+            {
+                Subject = new ClaimsIdentity(claims),
+                SigningCredentials = credentials,
+                Expires = DateTime.Now.AddMinutes(15)
+            };
+
+            JwtSecurityTokenHandler tokenHandler = new();
+
+            SecurityToken jwtToken = tokenHandler.CreateToken(descriptor);
+
+            return tokenHandler.WriteToken(jwtToken);
+
         }
     }
 }
