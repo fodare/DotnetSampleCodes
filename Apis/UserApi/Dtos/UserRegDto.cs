@@ -14,5 +14,16 @@ namespace UserApi.Dtos
 
         [JsonPropertyName("passwordConformation")]
         public string PasswordConformation { get; set; } = "";
+
+        [JsonPropertyName("firstName")]
+        public string FirstName { get; set; } = "";
+
+        [JsonPropertyName("lastName")]
+        public string LastName { get; set; } = "";
+
+        [JsonPropertyName("gender")]
+        public string Gender { get; set; } = "";
+
+
     }
 }
