@@ -2,9 +2,11 @@ using APIBasics.Data;
 using Microsoft.AspNetCore.Mvc;
 using webapi.Models;
 using webapi.Dtos;
+using Microsoft.AspNetCore.Authorization;
 
 namespace webapi.Controllers
 {
+    [Authorize]
     [ApiController]
     [Route("api/[controller]")]
     public class UsersController : ControllerBase
@@ -15,6 +17,7 @@ namespace webapi.Controllers
             _dappar = new DataContextDappar(configuration);
         }
 
+        [AllowAnonymous]
         [HttpGet("service-health", Name = "ServiceHealth")]
         public IActionResult GetServiceHealth()
         {
