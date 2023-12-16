@@ -66,9 +66,15 @@ namespace UserApi.Controllers
                 string sqlAddUser = @$"INSERT INTO TutorialAppSchema.AuthTable(
                     [Email], [Password], [PasswordConformation]
                 ) VALUES ('{newUser.Email}', '{newUser.Password}', '{newUser.PasswordConformation}')";
+
+                string sqlAddToUserTable = $@"INSERT INTO TutorialAppSchema.Users(
+                    [FirstName],[LastName],[Email],[Gender]
+                ) VALUES ('{newUser.FirstName}','{newUser.LastName}','{newUser.Email}','{newUser.Gender}');";
+
                 bool userAddded = _dapper.ExecuteSql(sqlAddUser);
                 if (userAddded)
                 {
+                    _dapper.ExecuteSql(sqlAddToUserTable);
                     return Ok("User account added sucessfully!");
                 }
                 return StatusCode(500, "Error adding user!. Please try again!");
