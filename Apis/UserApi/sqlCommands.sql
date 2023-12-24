@@ -12,20 +12,12 @@ CREATE TABLE TutorialAppSchema.Users
 )
 GO
 
-SELECT *
-FROM TutorialAppSchema.Users;
-GO
-
 CREATE TABLE TutorialAppSchema.Auth
 (
     [Email] [nvarchar](50) NULL,
     [PasswordHash] [varbinary](max) NULL,
     [PasswordSalt] [varbinary](max) NULL
 )
-GO
-
-SELECT *
-FROM TutorialAppSchema.Auth;
 GO
 
 CREATE TABLE TutorialAppSchema.AuthTable
@@ -35,11 +27,6 @@ CREATE TABLE TutorialAppSchema.AuthTable
     [PasswordConformation] [nvarchar](255) NULL
 )
 GO
-
-SELECT *
-FROM TutorialAppSchema.AuthTable;
-Go
-
 
 CREATE TABLE TutorialAppSchema.Posts
 (
@@ -52,7 +39,37 @@ CREATE TABLE TutorialAppSchema.Posts
 );
 GO
 
-CREATE CLUSTERED INDEX cix_Posts_UserId_PostId ON TutorialAppSchema.Posts(UserId, PostId);
+CREATE OR ALTER PROCEDURE TutorialAppSchema.spUser_Add
+    /* EXEC TutorialAppSchema.spUser_Add @email = 'likeman@test.com', @password = 'afadkfh', 
+    @passwordConfirmation = 'sfsdfshfs', @firstName = 'fiyre', 
+    @lastName = 'sdknfsd', @gender = 'Female'*/
+    @email nvarchar(50),
+    @password nvarchar(50),
+    @passwordConfirmation nvarchar(50),
+    @firstName nvarchar(50),
+    @lastName nvarchar(50),
+    @gender nvarchar(50)
+AS
+BEGIN
+    INSERT INTO TutorialAppSchema.AuthTable
+        ([Email],[Password],[PasswordConformation] )
+    VALUES
+        (@email, @password, @passwordConfirmation)
 
+    INSERT INTO TutorialAppSchema.Users
+        (
+        [FirstName], [LastName], [Email],[Gender], [Active])
+    VALUES
+        (@firstName, @lastName, @email, @gender, 1)
+END
 
-
+CREATE OR ALTER PROCEDURE TutorialAppSchema.spUserEmail_Get
+    /* EXEC TutorialAppSchema.spUserEmail_Get @useremail = boris */
+    @useremail VARCHAR(50)
+AS
+BEGIN
+    SELECT
+        [Email], [Password], [PasswordConformation]
+    FROM TutorialAppSchema.AuthTable
+    WHERE [Email] = @useremail
+END

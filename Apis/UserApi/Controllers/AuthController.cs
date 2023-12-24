@@ -67,19 +67,15 @@ namespace UserApi.Controllers
                 // {
                 //     return BadRequest($"An account with {newUser.Email} already exist!");
                 // }
-
-                string sqlAddUser = @$"INSERT INTO TutorialAppSchema.AuthTable(
-                    [Email], [Password], [PasswordConformation]
-                ) VALUES ('{newUser.Email}', '{newUser.Password}', '{newUser.PasswordConformation}')";
-
-                string sqlAddToUserTable = $@"INSERT INTO TutorialAppSchema.Users(
-                    [FirstName],[LastName],[Email],[Gender]
-                ) VALUES ('{newUser.FirstName}','{newUser.LastName}','{newUser.Email}','{newUser.Gender}');";
-
-                bool userAddded = _dapper.ExecuteSql(sqlAddUser);
+                string sqlCommand = @$"EXEC TutorialAppSchema.spUser_Add 
+                    @email = '{newUser.Email}', 
+                    @password = '{newUser.Password}', 
+                    @passwordConfirmation = '{newUser.PasswordConformation}', 
+                    @firstName = '{newUser.FirstName}', 
+                    @lastName = 'sdknfsd', @gender = '{newUser.LastName}'";
+                bool userAddded = _dapper.ExecuteSql(sqlCommand);
                 if (userAddded)
                 {
-                    _dapper.ExecuteSql(sqlAddToUserTable);
                     return Ok("User account added sucessfully!");
                 }
                 return StatusCode(500, "Error adding user!. Please try again!");
@@ -90,8 +86,8 @@ namespace UserApi.Controllers
         [HttpPost("login", Name = "GetAccessToken")]
         public IActionResult CreateAccessToken([FromBody] LoginDto userCreds)
         {
-            string sqlCheckUser = @$"SELECT [Email], [Password], [PasswordConformation] FROM
-                TutorialAppSchema.AuthTable WHERE [Email] = '{userCreds.Email}'";
+            string sqlCheckUser = @$"EXEC TutorialAppSchema.spUserEmail_Get 
+                @useremail = '{userCreds.Email}'";
 
             IEnumerable<UserRegDto> foundUsers = _dapper.LoadData<UserRegDto>(sqlCheckUser);
 
