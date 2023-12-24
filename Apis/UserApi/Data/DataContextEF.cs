@@ -34,7 +34,5 @@ namespace APIBasics.Data
             optionsBuilder.UseSqlServer(_config.GetConnectionString("devDbConnectionString"),
             optionsBuilder => optionsBuilder.EnableRetryOnFailure());
         }
-
-
     }
 }
