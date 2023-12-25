@@ -33,8 +33,7 @@ namespace UserApi.Controllers
         [HttpGet("getPosts", Name = "GetPots")]
         public ActionResult<IEnumerable<Post>> FetchPosts()
         {
-            string sqlGetPosts = @$"SELECT [PostId],[UserId],[PostTitle],[PostContent],
-                [PostCreationDate],[LastUpdateddate] FROM TutorialAppSchema.Posts";
+            string sqlGetPosts = @$"EXEC TutorialAppSchema.spPost_Get";
             IEnumerable<Post> postList = _dapper.LoadData<Post>(sqlGetPosts);
             return Ok(postList);
         }
@@ -42,12 +41,8 @@ namespace UserApi.Controllers
         [HttpGet("getPost/{postId}", Name = "GetPostById")]
         public ActionResult<Post> fetchPost(int postId)
         {
-            string sqlGetPost = @$"SELECT [PostId],[UserId],[PostTitle],[PostContent],
-                [PostCreationDate],[LastUpdateddate] FROM TutorialAppSchema.Posts
-                WHERE [PostId] = '{postId}'";
-
+            string sqlGetPost = @$"EXEC TutorialAppSchema.spPost_Get @postId = {postId} ";
             Post queriePost = _dapper.LoadDataSingle<Post>(sqlGetPost);
-
             if (queriePost.PostId > 0)
             {
                 return Ok(queriePost);
@@ -60,9 +55,7 @@ namespace UserApi.Controllers
         {
             int userId = int.Parse(this.User.FindFirst("userId")?.Value);
 
-            string sqlGetPost = $@"SELECT [PostId],[UserId],[PostTitle],[PostContent],
-                [PostCreationDate],[LastUpdateddate] FROM TutorialAppSchema.Posts
-                WHERE [UserId] = {userId}";
+            string sqlGetPost = $@"EXEC TutorialAppSchema.spPost_Get @userId = {userId}";
 
             IEnumerable<Post> userPostList = _dapper.LoadData<Post>(sqlGetPost);
             if (userPostList.Count() > 0)
@@ -111,8 +104,8 @@ namespace UserApi.Controllers
         public ActionResult RemovePost(int postId)
         {
             int userId = int.Parse(this.User.FindFirst("userId").Value);
-            string sqlDelete = @$"DELETE FROM TutorialAppSchema.Posts WHERE
-                [PostId] = {postId} AND [UserId] = {userId}";
+            string sqlDelete = @$"EXEC TutorialAppSchema.spPost_Delete 
+                @postId = {postId}, @userId = {userId}";
             bool postDeleted = _dapper.ExecuteSql(sqlDelete);
             if (postDeleted)
             {
