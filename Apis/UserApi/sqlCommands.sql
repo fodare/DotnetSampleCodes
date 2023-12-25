@@ -73,3 +73,31 @@ BEGIN
     FROM TutorialAppSchema.AuthTable
     WHERE [Email] = @useremail
 END
+
+CREATE OR ALTER PROCEDURE TutorialAppSchema.spPost_Get
+    /* EXEC TutorialAppSchema.spPost_Get @postId = 3, @userId = 2 */
+    /* EXEC TutorialAppSchema.spPost_Get @userId = 3 */
+    @postId  INT = NULL,
+    @userId INT = NULL
+AS
+BEGIN
+    SELECT [PostId],
+        [UserId],
+        [PostTitle],
+        [PostContent],
+        [PostCreationDate],
+        [LastUpdateddate]
+    FROM TutorialAppSchema.Posts
+    WHERE [PostId] = ISNULL(@postId, PostId)
+        AND [UserId] = ISNULL(@userId, UserId)
+END
+
+CREATE OR ALTER PROCEDURE TutorialAppSchema.spPost_Delete
+    /* EXEC TutorialAppSchema.spPost_Delete @postId = 10, @userId = 1002 */
+    @postId INT,
+    @userId INT
+AS
+BEGIN
+    DELETE FROM TutorialAppSchema.Posts
+    WHERE [PostId] = @postId AND [UserId] = @userId
+END
